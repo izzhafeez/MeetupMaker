@@ -1,8 +1,11 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
-from .coordinates import views as c_views
+from .malls.urls import urlpatterns as malls_urls
+from .mrt.urls import urlpatterns as mrt_urls
 
 urlpatterns = [
   path('', views.index, name='index'),
+  *malls_urls,
+  *mrt_urls
 ]
