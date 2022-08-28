@@ -32,21 +32,21 @@ class Mall(models.Model):
   halals = models.IntegerField(default=0)
   desirability = models.DecimalField(blank=False,
                                      decimal_places=4,
-                                     default=0,                      
+                                     default=0.0,                      
                                      max_digits=7,
                                      validators=[
                                       MinValueValidator(0),
                                       MaxValueValidator(100)
                                       ])
   def save(self, *args, **kwargs):
-    self.desirability = self.stores * self.halals
+    self.desirability = self.stores
     super(Mall, self).save(*args, **kwargs)
 
 class Halal(models.Model):
   name = models.CharField(max_length=100)
   coordinates = models.ForeignKey(Coordinates, on_delete=models.CASCADE)
   unit = models.CharField(max_length=100)
-  mall = models.ForeignKey(Mall, on_delete=models.CASCADE)
+  mall = models.ForeignKey(Mall, on_delete=models.CASCADE, default=None)
 
 class MRT(models.Model):
   name = models.CharField(max_length=100, unique=True)
