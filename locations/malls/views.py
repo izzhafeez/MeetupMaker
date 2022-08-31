@@ -2,7 +2,7 @@ import ast
 from django.core.serializers import serialize
 from django.http import JsonResponse
 
-from ..models import Coordinates, Mall
+from ..models import Mall, MRT
 
 # Create your views here.
 def jsonify_single(obj):
@@ -15,11 +15,15 @@ def create(request):
       lon = float(request.POST['lon'])
       name = request.POST['name']
       stores = int(request.POST['stores'])
+      mrt = MRT.objects.get(name=request.POST["mrt"])
       
-      coords = Coordinates(lat=lat,lon=lon)
-      coords.save()
+      mall = Mall(
+        lat=lat,
+        lon=lon,
+        name=name,
+        stores=stores,
+        mrt=mrt)
       
-      mall = Mall(coordinates=coords, name=name, stores=stores)
       mall.save()
       
       return JsonResponse({ 'mall': jsonify_single(mall) })

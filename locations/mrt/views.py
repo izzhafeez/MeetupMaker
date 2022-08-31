@@ -2,7 +2,7 @@ import ast
 from django.core.serializers import serialize
 from django.http import JsonResponse
 
-from ..models import Coordinates, MRT
+from ..models import MRT
 
 # Create your views here.
 def jsonify_single(obj):
@@ -15,10 +15,7 @@ def create(request):
       lon = float(request.POST['lon'])
       name = request.POST['name']
       
-      coords = Coordinates(lat=lat,lon=lon)
-      coords.save()
-      
-      mrt = MRT(coordinates=coords, name=name)
+      mrt = MRT(lat=lat,lon=lon, name=name)
       mrt.save()
       
       return JsonResponse({ 'mrt': jsonify_single(mrt) })
@@ -49,7 +46,7 @@ def delete(request):
   if request.method == 'POST':
     try:
       name = request.POST['name']
-      mall = MRT.objects.get(name=name).delete()
+      mrt = MRT.objects.get(name=name).delete()
       return JsonResponse({ 'deleted': True })
     except ValueError:
       return JsonResponse({ 'err': 'Value Error' })
