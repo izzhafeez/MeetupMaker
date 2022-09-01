@@ -15,22 +15,24 @@ def create(request):
       lon = float(request.POST['lon'])
       name = request.POST['name']
       stores = int(request.POST['stores'])
-      mrt = MRT.objects.get(name=request.POST["mrt"])
+      halals = 0
+      mrt = request.POST["mrt"]
+      mrt_obj = MRT.objects.get(name=mrt)
       
-      mall = Mall(
-        lat=lat,
-        lon=lon,
-        name=name,
-        stores=stores,
-        mrt=mrt)
+      Mall.objects.update_or_create(lat=lat,
+                                    lon=lon,
+                                    name=name,
+                                    stores=stores,
+                                    halals=halals,
+                                    mrt=mrt_obj)
       
-      mall.save()
+      mall = Mall.objects.get(name=name)
       
       return JsonResponse({ 'mall': jsonify_single(mall) })
     except ValueError as e:
       return JsonResponse({ 'err': f'Value Error: {str(e)}' })
-    except AttributeError:
-      return JsonResponse({ 'err': 'Needs name, lat and lon' })
+    except AttributeError as e:
+      return JsonResponse({ 'err': f'Attribute Error: {str(e)}' })
     except Exception as e:
       return JsonResponse({ 'err': str(e) })
   return JsonResponse({})

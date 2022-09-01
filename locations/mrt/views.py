@@ -14,8 +14,9 @@ def create(request):
       lat = float(request.POST['lat'])
       lon = float(request.POST['lon'])
       name = request.POST['name']
+      code = request.POST['code']
       
-      mrt = MRT(lat=lat,lon=lon, name=name)
+      mrt = MRT(lat=lat, lon=lon, name=name, code=code)
       mrt.save()
       
       return JsonResponse({ 'mrt': jsonify_single(mrt) })
