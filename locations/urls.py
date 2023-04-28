@@ -1,11 +1,7 @@
 from django.urls import include, path
 
-from . import views
-from .malls.urls import urlpatterns as malls_urls
-from .mrt.urls import urlpatterns as mrt_urls
-
+app_name = 'locations'
 urlpatterns = [
-  path('', views.index, name='index'),
-  *malls_urls,
-  *mrt_urls
+  path('mrt/', include('locations.mrt.urls')),
+  path('destination/', include('locations.destination.urls'))
 ]

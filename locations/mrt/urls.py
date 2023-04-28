@@ -1,9 +1,8 @@
-from django.urls import path
+from django.urls import path, include
 
-from . import views
-
+app_name = 'locations.mrt'
 urlpatterns = [
-  path('mrt/create/', views.create, name="create_mrt"),
-  path('mrt/read/', views.read, name="read_mrt"),
-  path('mrt/delete/', views.delete, name="delete_mrt")
+  path('station/', include('locations.mrt.station.urls', namespace='stations')),
+  path('platform/', include('locations.mrt.platform.urls', namespace='platforms')),
+  path('connection/', include('locations.mrt.connection.urls', namespace='connections'))
 ]

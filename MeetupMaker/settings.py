@@ -10,14 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-import django_heroku
 import dj_database_url
 from pathlib import Path
 import os
-import environ
-
-env=environ.Env()
-environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -27,7 +22,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'hg1$^-et9ymijqp%0cqm+q+#tyqp10i6f*#6v7yszh-kcben=_')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -83,7 +78,14 @@ WSGI_APPLICATION = 'MeetupMaker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {'default': dj_database_url.parse(env("POSTGRES"))}
+DATABASES = {'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'mynameizzhafeez/meetup-maker',
+    'USER': 'mynameizzhafeez',
+    'PASSWORD': 'v2_43YQH_R7Z7x8zDN6J4qNWznpvaxqH',
+    'HOST': 'db.bit.io',
+    'POST': '5432',
+}}
 
 
 # Password validation
@@ -125,5 +127,3 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-django_heroku.settings(locals())
