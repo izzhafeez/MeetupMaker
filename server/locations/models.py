@@ -1,6 +1,9 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
+from __future__ import annotations
+from typing import Any, Dict
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import DecimalField, Model, TextField
+from django.http import JsonResponse
 
 # Create your models here.
 class Location(Model):
@@ -25,4 +28,23 @@ class Location(Model):
       MaxValueValidator(104.04360)
     ]
   )
+  
+  @property
+  def as_dict(self) -> Dict[str, Any]:
+    return {
+      "name": self.name,
+      "latitude": self.latitude,
+      "longitude": self.longitude
+    }
+  
+  @property
+  def as_json_response(self) -> JsonResponse:
+    data = self.as_dict
+    return JsonResponse(data)
+  
+  def get_distance_to(self, lat, lng) -> float:
+    return 111.33 * (
+      (self.latitude - lat) ** 2 \
+      + (self.longitude - lng) ** 2
+    ) ** 0.5
   

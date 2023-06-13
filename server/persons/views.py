@@ -1,6 +1,4 @@
 # Create your views here.
-from typing import Any, Dict
-
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -13,7 +11,7 @@ from common.views import _get_errors_from_form
 def list_persons(_: HttpRequest) -> JsonResponse:
   persons = Person.objects.all()
   data = {
-    "persons": [_get_person_as_dict(person) for person in persons]
+    "persons": [person.as_dict for person in persons]
   }
   return JsonResponse(data)
 
@@ -24,13 +22,13 @@ def create_person(request: HttpRequest) -> JsonResponse:
     form = PersonForm(request.POST)
     if form.is_valid():
       person: Person = form.save()
-      return _get_person_as_json_response(person)
+      return person.as_json_response
   form = PersonForm()
   return _get_errors_from_form(form)
 
 def read_person(_: HttpRequest, pk) -> JsonResponse:
   person = get_object_or_404(Person, pk=pk)
-  return _get_person_as_json_response(person)
+  return person.as_json_response
 
 @csrf_exempt
 def update_person(request: HttpRequest, pk) -> JsonResponse:
@@ -39,7 +37,7 @@ def update_person(request: HttpRequest, pk) -> JsonResponse:
     form = PersonForm(request.POST, instance=person)
     if form.is_valid():
       form.save()
-      return _get_person_as_json_response(person)
+      return person.as_json_response
   form = PersonForm()
   return _get_errors_from_form(form)
 
@@ -50,14 +48,3 @@ def delete_person(request: HttpRequest, pk) -> JsonResponse:
     person.delete()
     return JsonResponse({})
   return JsonResponse({}, status=400)
-
-def _get_person_as_json_response(person: Person) -> JsonResponse:
-  data = _get_person_as_dict(person)
-  return JsonResponse(data)
-
-def _get_person_as_dict(person: Person) -> Dict[str, Any]:
-  return {
-    "name": person.name,
-    "latitude": person.latitude,
-    "longitude": person.longitude
-  }
