@@ -1,1 +1,4 @@
 /MeetupMaker/.env
+venv
+.DS_Store
+.idea
