@@ -44,7 +44,8 @@ class Location(Model):
   
   def get_distance_to(self, lat, lng) -> float:
     return 111.33 * (
-      (self.latitude - lat) ** 2 \
-      + (self.longitude - lng) ** 2
-    ) ** 0.5
+      float(
+        (self.latitude - lat) ** 2 \
+        + (self.longitude - lng) ** 2
+      ) ** 0.5)
   

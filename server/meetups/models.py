@@ -8,7 +8,7 @@ from persons.models import Person
 
 # Create your models here.
 class Meetup(Model):
-  meetup_id = AutoField(primary_key=True)
+  meetup = AutoField(primary_key=True)
   
   location: Location = ForeignKey(
     'locations.location',
@@ -17,10 +17,10 @@ class Meetup(Model):
   
   @property
   def as_dict(self) -> Dict[str, Any]:
-    participations: List[Participate] = Participate.objects.filter(meetup=self.meetup_id)
+    participations: List[Participate] = Participate.objects.filter(meetup=self.meetup)
     participants: List[Person] = [p.participant for p in participations]
     return {
-      'meetup_id': self.meetup_id,
+      'meetup': self.meetup,
       'location': self.location.as_dict,
       'participants': [p.as_dict for p in participants]
     }
@@ -31,7 +31,7 @@ class Meetup(Model):
     return JsonResponse(data)
   
 class Participate(Model):
-  meetup_id: Meetup = ForeignKey(
+  meetup: Meetup = ForeignKey(
     'meetups.Meetup',
     on_delete=CASCADE
   )
